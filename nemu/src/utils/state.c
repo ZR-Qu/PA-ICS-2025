@@ -15,10 +15,10 @@
 
 #include <utils.h>
 
-NEMUState nemu_state = { .state = NEMU_STOP };
+NEMUState nemu_state = { .state = NEMU_STOP };  //enum中NEMU_STOP=1
 
 int is_exit_status_bad() {
-  int good = (nemu_state.state == NEMU_END && nemu_state.halt_ret == 0) ||
-    (nemu_state.state == NEMU_QUIT);
-  return !good;
+  int good = (nemu_state.state == NEMU_END && nemu_state.halt_ret == 0) || //程序跑完了且结果是0
+    (nemu_state.state == NEMU_QUIT); //用户主动要求退出 enum中NEMU_QUIT为4
+  return !good; //good = 1, 返回0，表示正常
 }
