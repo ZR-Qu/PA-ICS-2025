@@ -19,6 +19,7 @@
 #include <readline/history.h>
 #include "sdb.h"
 #include "utils.h"
+#include <memory/vaddr.h>
 
 static int is_batch_mode = false;
 
@@ -93,8 +94,27 @@ static int cmd_info(char *args) {
 }
 
 static int cmd_x(char *args) {
-  nemu_state.state = NEMU_QUIT;
-  return -1;
+  if (args == NULL) {
+    printf("Usage: x N EXPR (e.g., x 10 0x80000000)\n");
+    return 0;
+  }
+
+  int n;
+  vaddr_t addr;
+
+  int ret = sscanf(args, "%d %x", &n, &addr);
+
+  if(ret != 2){
+    printf("err!! Usage: x N EXPR (e.g., x 10 0x80000000)\n");
+  }
+
+  for (int i = 0; i < n; i++) {
+    word_t data = vaddr_read(addr, 4);
+    printf("0x%08x: 0x%08x\n", addr, data);
+    addr += 4;
+    }
+
+  return 0;
 }
 
 static int cmd_help(char *args);
@@ -109,7 +129,7 @@ static struct {
   { "q", "Exit NEMU", cmd_q },
   {"si","Step through N instructions", cmd_si},
   { "info", "print status", cmd_info },
-  {"x", "", cmd_x},
+  {"x", "scan memory", cmd_x},
 
   /* TODO: Add more commands */
 
