@@ -21,10 +21,10 @@
 #include <regex.h>
 
 enum {
-  TK_NOTYPE = 256, TK_EQ,
-
-  /* TODO: Add more token types */
-
+  TK_NOTYPE = 256, 
+  TK_EQ,
+  TK_HEX, 
+  TK_DEC,
 };
 
 static struct rule {
@@ -32,13 +32,19 @@ static struct rule {
   int token_type;
 } rules[] = {
 
-  /* TODO: Add more rules.
-   * Pay attention to the precedence level of different rules.
-   */
-
   {" +", TK_NOTYPE},    // spaces
-  {"\\+", '+'},         // plus
+
   {"==", TK_EQ},        // equal
+
+  {"\\+", '+'},                 // 匹配 +
+  {"\\-", '-'},                 // 匹配 -
+  {"\\*", '*'},                 // 匹配 *
+  {"\\/", '/'},                 // 匹配 / 
+  {"\\(", '('},                 // 匹配 (
+  {"\\)", ')'},                 // 匹配 )
+
+  {"0x[0-9a-fA-F]+", TK_HEX},   // 匹配十六进制
+  {"[0-9]+", TK_DEC},           // 匹配十进制整数
 };
 
 #define NR_REGEX ARRLEN(rules)
@@ -75,7 +81,7 @@ static bool make_token(char *e) {
   int i;
   regmatch_t pmatch;
 
-  nr_token = 0;
+  nr_token = 0; // Number of Tokens
 
   while (e[position] != '\0') {
     /* Try all rules one by one. */
@@ -94,8 +100,38 @@ static bool make_token(char *e) {
          * of tokens, some extra actions should be performed.
          */
 
+        if (rules[i].token_type != TK_NOTYPE && nr_token >= 32) { 
+             printf("Error: Too many tokens!\n");
+             assert(0);
+        }
+
         switch (rules[i].token_type) {
-          default: TODO();
+          case TK_NOTYPE:
+            break;
+          case TK_DEC:
+          case TK_HEX:
+            tokens[nr_token].type = rules[i].token_type;
+
+            if (substr_len >= 32) {
+                printf("Error: Token too long at position %d\n", position);
+                assert(0);
+            }
+
+            // 拷贝
+            strncpy(tokens[nr_token].str, substr_start, substr_len);  //不会自动在拷贝结果的末尾追加字符串结束符 \0
+            
+            // 添加结束符
+            tokens[nr_token].str[substr_len] = '\0';
+
+            nr_token++; // 计数器加一
+            break;
+
+          default:
+            // 对于 +, -, *, /, (, ) 运算符
+            // 只需要记录类型，不需要记录具体字符串
+            tokens[nr_token].type = rules[i].token_type;
+            nr_token++;
+            break;
         }
 
         break;
