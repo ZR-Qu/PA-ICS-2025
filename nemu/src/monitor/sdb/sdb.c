@@ -72,6 +72,31 @@ static int cmd_si(char *args) {
   return 0;
 }
 
+static int cmd_info(char *args) {
+  char *arg = strtok(args, " ");  //以空格 ' ' 作为分隔符，处理arg
+
+  if (arg == NULL) {
+    printf("Usage: info r (registers) or info w (watchpoints)\n");
+    return 0;
+  }
+
+  if(strcmp(arg,"r") == 0){
+    isa_reg_display();
+  }else if(strcmp(arg,"w") == 0){
+    printf("/* TODO: sdb_watchpoint_display() */");
+    // sdb_watchpoint_display();
+  }else{
+    printf("Usage: info r (registers) or info w (watchpoints)\n");
+  }
+
+  return 0;
+}
+
+static int cmd_x(char *args) {
+  nemu_state.state = NEMU_QUIT;
+  return -1;
+}
+
 static int cmd_help(char *args);
 
 static struct {
@@ -83,6 +108,8 @@ static struct {
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
   {"si","Step through N instructions", cmd_si},
+  { "info", "print status", cmd_info },
+  {"x", "", cmd_x},
 
   /* TODO: Add more commands */
 
