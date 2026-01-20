@@ -301,7 +301,7 @@ sdb 调试器
 
 
 
-###实现si
+### 实现si
 
 ```
 nemu/src/monitor/sdb/sdb.c
@@ -362,7 +362,7 @@ isa_reg_display();在nemu/src/isa/$ISA/reg.c
 
 
 
-#PA1.2 2026.1.19(复现时先去看bug部分)
+# PA1.2 2026.1.19(复现时先去看bug部分)
 
 词法分析：识别出表达式中的单元
 
@@ -730,7 +730,7 @@ make run
 
 一个超长的表达式
 
-![image-20260120162743832](assets/PA-Log/image-20260120162743832.png)
+![image-20260120162743832](https://pic-obsidian-typora.oss-cn-wuhan-lr.aliyuncs.com/20260120224754550.png)
 
 发现是因为用的 int 要用 uint32_t 即 word_t
 
@@ -754,7 +754,7 @@ word_t res = 0;
 
 ##### bug2:(gcc按有符号，nemu按无符号)
 
-![image-20260120164622544](assets/PA-Log/image-20260120164622544.png)
+![image-20260120164622544](https://pic-obsidian-typora.oss-cn-wuhan-lr.aliyuncs.com/20260120224806928.png)
 
 ```
 [Error] Test failed!
