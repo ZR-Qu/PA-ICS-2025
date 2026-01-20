@@ -147,34 +147,12 @@ static bool make_token(char *e) {
   return true;
 }
 
-// static bool check_parentheses(int p, int q) {
-//     if (tokens[p].type != '(' || tokens[q].type != ')') {
-//         return false;
-//     }
-
-//     // 两个括号是否为配对括号
-//     int balance = 0;
-//     for (int i = p; i < q; i++) {
-//         if (tokens[i].type == '(') {
-//             balance++;
-//         } else if (tokens[i].type == ')') {
-//             balance--;
-//         }
-
-//         if (balance == 0) {
-//             return false;
-//         }
-//     }
-
-//     return true;
-// }
-
 static bool check_parentheses(int p, int q) {
     if (tokens[p].type != '(' || tokens[q].type != ')') {
         return false;
     }
 
-    // 检查括号是否配对
+    // 两个括号是否为配对括号
     int balance = 0;
     for (int i = p; i < q; i++) {
         if (tokens[i].type == '(') {
@@ -183,16 +161,13 @@ static bool check_parentheses(int p, int q) {
             balance--;
         }
 
-        // 如果 balance 小于 0，说明右括号多于左括号，直接返回 false
-        if (balance < 0) {
+        if (balance == 0) {
             return false;
         }
     }
 
-    // 如果遍历完成，balance 应该为 0 才是配对的括号
-    return balance == 0;
+    return true;
 }
-
 
 static word_t eval(int p, int q, bool *success) {
   if(*success == false) return 0;
