@@ -26,9 +26,9 @@ void test_expr() {
     printf("Test: Start testing...\n");
     
     // 打开 input 文件
-    FILE *fp = fopen("nemu/tools/gen-expr/build/input", "r");
+    FILE *fp = fopen("tools/gen-expr/build/input", "r");
     if (fp == NULL) {
-        printf("Error: Cannot open input file 'tools/gen-expr/input'.\n");
+        printf("Error: Cannot open input file 'tools/gen-expr/build/input'.\n");
         printf("Please run 'make' and './gen-expr 10000 > input' in tools/gen-expr/ first.\n");
         return;
     }
