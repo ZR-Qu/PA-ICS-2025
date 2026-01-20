@@ -227,10 +227,10 @@ static word_t eval(int p, int q, bool *success) {
     }
     if(op_index == -1) assert(0);
 
-    int val1 = eval(p, op_index-1, success);
-    int val2 = eval(op_index+1, q, success);
+    word_t val1 = eval(p, op_index-1, success);
+    word_t val2 = eval(op_index+1, q, success);
 
-    int res = 0;
+    word_t res = 0;
     switch(op_type){
       case '+':
         res = val1 + val2;
