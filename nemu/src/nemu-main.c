@@ -27,7 +27,7 @@ word_t expr(char *e, bool *success);
 void test_expr() {
     printf("Test: Start testing...\n");
     
-    FILE *fp = fopen("tools/gen-expr/input", "r");
+    FILE *fp = fopen("tools/gen-expr/build/input", "r");
     if (fp == NULL) {
         printf("Error: Cannot open input file.\n");
         return;
