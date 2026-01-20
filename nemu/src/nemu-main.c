@@ -20,7 +20,7 @@ void am_init_monitor();
 void engine_start();
 int is_exit_status_bad();
 
-#define TEST_EXPR
+// #define TEST_EXPR
 word_t expr(char *e, bool *success);
 
 // 用于测试expc()
@@ -54,8 +54,7 @@ void test_expr() {
         word_t actual_res = expr(expr_str, &success);
 
         if (success == false) {
-            // 如果 NEMU 报错（比如除0），但 GCC 没报错
-            // 我们选择“跳过”这个有争议的用例，而不是让程序崩溃
+            // 如果 存在坏例则跳过  【NEMU 报错（比如除0），但 GCC 没报错】
             printf("[Warn] Skipped bad case at line %d (NEMU failed)\n", count);
             skipped_count++;
             count++;
@@ -69,7 +68,6 @@ void test_expr() {
             printf("Expected: %u\n", expected_res);
             printf("Actual:   %u\n", actual_res);
             failed_count++;
-            // assert(0); // 建议注释掉 assert，看看到底有多少个错的
         }
         
         count++;
