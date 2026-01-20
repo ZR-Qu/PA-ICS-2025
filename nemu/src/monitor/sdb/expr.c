@@ -147,12 +147,34 @@ static bool make_token(char *e) {
   return true;
 }
 
+// static bool check_parentheses(int p, int q) {
+//     if (tokens[p].type != '(' || tokens[q].type != ')') {
+//         return false;
+//     }
+
+//     // 两个括号是否为配对括号
+//     int balance = 0;
+//     for (int i = p; i < q; i++) {
+//         if (tokens[i].type == '(') {
+//             balance++;
+//         } else if (tokens[i].type == ')') {
+//             balance--;
+//         }
+
+//         if (balance == 0) {
+//             return false;
+//         }
+//     }
+
+//     return true;
+// }
+
 static bool check_parentheses(int p, int q) {
     if (tokens[p].type != '(' || tokens[q].type != ')') {
         return false;
     }
 
-    // 两个括号是否为配对括号
+    // 检查括号是否配对
     int balance = 0;
     for (int i = p; i < q; i++) {
         if (tokens[i].type == '(') {
@@ -161,12 +183,14 @@ static bool check_parentheses(int p, int q) {
             balance--;
         }
 
-        if (balance == 0) {
+        // 如果 balance 小于 0，说明右括号多于左括号，直接返回 false
+        if (balance < 0) {
             return false;
         }
     }
 
-    return true;
+    // 如果遍历完成，balance 应该为 0 才是配对的括号
+    return balance == 0;
 }
 
 
@@ -231,13 +255,6 @@ static word_t eval(int p, int q, bool *success) {
     word_t val2 = eval(op_index+1, q, success);
 
     word_t res = 0;
-
-    if ((p == 0 && q == nr_token - 1) || (op_type == '/' && val1 == 3462823654UL)) {
-        printf("\n[DEBUG] Split point: op='%c' at index %d\n", op_type, op_index);
-        printf("[DEBUG] val1 (left)  = %u\n", val1);
-        printf("[DEBUG] val2 (right) = %u\n", val2);
-        fflush(stdout); 
-    }
 
     switch(op_type){
       case '+':
