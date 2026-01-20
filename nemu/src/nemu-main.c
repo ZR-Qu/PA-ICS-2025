@@ -20,7 +20,7 @@ void am_init_monitor();
 void engine_start();
 int is_exit_status_bad();
 
-#define TEST_EXPR
+// #define TEST_EXPR
 word_t expr(char *e, bool *success);
 
 // 用于测试expc()
