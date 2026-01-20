@@ -35,8 +35,8 @@ void test_expr() {
 
     char line[65536];
     int count = 0;
-    int failed_count = 0; // 统计失败的
-    int skipped_count = 0; // 统计跳过的
+    int failed_count = 0; // 失败的
+    int skipped_count = 0; // 跳过的
     
     while (fgets(line, sizeof(line), fp)) {
         line[strcspn(line, "\n")] = '\0';
@@ -53,11 +53,10 @@ void test_expr() {
         bool success;
         word_t actual_res = expr(expr_str, &success);
 
-        // 🔥 关键修改：防御性策略
         if (success == false) {
             // 如果 NEMU 报错（比如除0），但 GCC 没报错
             // 我们选择“跳过”这个有争议的用例，而不是让程序崩溃
-            // printf("[Warn] Skipped bad case at line %d (NEMU failed)\n", count);
+            printf("[Warn] Skipped bad case at line %d (NEMU failed)\n", count);
             skipped_count++;
             count++;
             continue; 
