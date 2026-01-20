@@ -73,7 +73,7 @@ typedef struct token {
   char str[32];
 } Token;
 
-static Token tokens[32] __attribute__((used)) = {};
+static Token tokens[65535] __attribute__((used)) = {};
 static int nr_token __attribute__((used))  = 0;
 
 static bool make_token(char *e) {
@@ -100,7 +100,7 @@ static bool make_token(char *e) {
          * of tokens, some extra actions should be performed.
          */
 
-        if (rules[i].token_type != TK_NOTYPE && nr_token >= 32) { 
+        if (rules[i].token_type != TK_NOTYPE && nr_token >= 65536) { 
              printf("Error: Too many tokens!\n");
              assert(0);
         }
@@ -185,7 +185,7 @@ static word_t eval(int p, int q, bool *success) {
     else if (tokens[p].type == TK_HEX) {
         return strtoul(tokens[p].str, NULL, 16);
     }
-    
+
     *success = false;
     return 0;
   }
