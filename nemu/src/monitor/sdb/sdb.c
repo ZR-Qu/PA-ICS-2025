@@ -117,6 +117,24 @@ static int cmd_x(char *args) {
   return 0;
 }
 
+static int cmd_p(char *args) {
+  if (args == NULL) {
+    printf("Usage: p  $eax + 1\n");
+    return 0;
+  }
+
+  bool success = true;
+  word_t res = expr(args, &success);
+
+  if(success){
+    printf("result = %u\n", res);
+  }else{
+    printf("ERR:Evaluation failed.\n");
+  }
+
+  return 0;
+}
+
 static int cmd_help(char *args);
 
 static struct {
@@ -130,8 +148,7 @@ static struct {
   {"si","Step through N instructions", cmd_si},
   { "info", "print status", cmd_info },
   {"x", "scan memory", cmd_x},
-
-  /* TODO: Add more commands */
+  { "p", "Evaluate expression", cmd_p },
 
 };
 

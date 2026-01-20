@@ -147,6 +147,114 @@ static bool make_token(char *e) {
   return true;
 }
 
+static bool check_parentheses(int p, int q) {
+    if (tokens[p].type != '(' || tokens[q].type != ')') {
+        return false;
+    }
+
+    // 两个括号是否为配对括号
+    int balance = 0;
+    for (int i = p; i < q; i++) {
+        if (tokens[i].type == '(') {
+            balance++;
+        } else if (tokens[i].type == ')') {
+            balance--;
+        }
+
+        if (balance == 0) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+
+static word_t eval(int p, int q, bool *success) {
+  if(*success == false) return 0;
+  if (p > q) {
+    *success = false;
+    return 0;
+  }
+  else if (p == q) {  //Single token，应为一个数
+    // 十进制数
+    if (tokens[p].type == TK_DEC) {
+        return strtoul(tokens[p].str, NULL, 10);
+    }
+    // 十六进制数
+    else if (tokens[p].type == TK_HEX) {
+        return strtoul(tokens[p].str, NULL, 16);
+    }
+    
+    *success = false;
+    return 0;
+  }
+  else if (check_parentheses(p, q) == true) {
+    /* 
+    The expression is surrounded by a matched pair of parentheses.
+    If that is the case, just throw away the parentheses.
+     */
+     return eval(p + 1, q - 1, success);
+  }
+  else {  //p < q
+    // 寻找主运算符 从 p 到 q 扫描，找括号外的、优先级最低的、最右边的运算符
+    int op_index = -1;
+    int op_type = 0;
+    int parens_cnt = 0;
+
+    for(int i = p; i <= q; i++){
+      if (tokens[i].type == '(') {
+        parens_cnt++;
+      } else if (tokens[i].type == ')') {
+        parens_cnt--;
+      }
+
+      if(parens_cnt == 0 && !(tokens[i].type == TK_DEC || tokens[i].type == TK_HEX || tokens[i].type == ')')){
+        int cur_op_type = tokens[i].type; 
+        if(op_index == -1){
+          op_index = i;
+          op_type = cur_op_type;
+        }else if(cur_op_type == '+'||cur_op_type == '-'){
+          op_index = i;
+          op_type = cur_op_type;
+        }else if(cur_op_type == '*'||cur_op_type == '/'){
+          if(op_type != '+' && op_type != '-'){
+            op_index = i;
+            op_type = cur_op_type;
+          }
+        }
+      }
+    }
+    if(op_index == -1) assert(0);
+
+    int val1 = eval(p, op_index-1, success);
+    int val2 = eval(op_index+1, q, success);
+
+    int res = 0;
+    switch(op_type){
+      case '+':
+        res = val1 + val2;
+        break;
+      case '-':
+        res = val1 - val2;
+        break;
+      case '*':
+        res = val1 * val2;
+        break;
+      case '/':
+        if(val2){
+          res = val1 / val2;
+        }else{
+          printf("ERR: Division by zero.\n");
+          *success = false;
+        }
+        break;
+      default: assert(0);
+    }
+    return res;
+  }
+}
+
 
 word_t expr(char *e, bool *success) {
   if (!make_token(e)) {
@@ -154,8 +262,9 @@ word_t expr(char *e, bool *success) {
     return 0;
   }
 
-  /* TODO: Insert codes to evaluate the expression. */
-  TODO();
+  *success = true;
 
-  return 0;
+  word_t res = eval(0, nr_token - 1, success);
+
+  return res;
 }
