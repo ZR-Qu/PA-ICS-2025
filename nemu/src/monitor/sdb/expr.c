@@ -231,6 +231,11 @@ static word_t eval(int p, int q, bool *success) {
     word_t val2 = eval(op_index+1, q, success);
 
     word_t res = 0;
+
+    if (p == 0 && q == nr_token - 1) {
+        printf("DEBUG: MainOp='%c' Val1=%u Val2=%u\n", tokens[op_index].type, val1, val2);
+    }
+
     switch(op_type){
       case '+':
         res = val1 + val2;
