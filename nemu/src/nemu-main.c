@@ -20,8 +20,10 @@ void am_init_monitor();
 void engine_start();
 int is_exit_status_bad();
 
+#define TEST_EXPR
 word_t expr(char *e, bool *success);
 
+// 用于测试expc()
 void test_expr() {
     printf("Test: Start testing...\n");
     
@@ -87,8 +89,10 @@ int main(int argc, char *argv[]) {
   init_monitor(argc, argv);
 #endif
 
+#ifdef TEST_EXPR  // 用于测试expc()
   test_expr();
   return 0;
+#endif
 
   /* Start engine. */
   engine_start();
