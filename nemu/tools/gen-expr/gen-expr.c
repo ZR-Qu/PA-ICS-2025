@@ -41,7 +41,7 @@ static void gen(char c) {
 
 // 生成随机数字
 static void gen_num() {
-    buf_pos += sprintf(buf + buf_pos, "%d", rand() % 1000);
+    buf_pos += sprintf(buf + buf_pos, "%du", rand() % 1000);
 }
 
 // 生成随机运算符

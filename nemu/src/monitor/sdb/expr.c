@@ -44,7 +44,7 @@ static struct rule {
   {"\\)", ')'},                 // 匹配 )
 
   {"0x[0-9a-fA-F]+", TK_HEX},   // 匹配十六进制
-  {"[0-9]+", TK_DEC},           // 匹配十进制整数
+  {"[0-9]+[uU]?", TK_DEC},           // 匹配十进制整数
 };
 
 #define NR_REGEX ARRLEN(rules)
